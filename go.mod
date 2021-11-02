@@ -3,6 +3,7 @@ module GoWork
 go 1.16
 
 require (
+	github.com/chrislusf/glow v0.0.0-20181102060906-4c40a2717eee // indirect
 	github.com/coreos/bbolt v1.3.6 // indirect
 	github.com/coreos/etcd v3.3.26+incompatible // indirect
 	github.com/coreos/go-semver v0.3.0 // indirect
@@ -17,6 +18,7 @@ require (
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0 // indirect
 	github.com/jonboulle/clockwork v0.2.2 // indirect
 	github.com/prometheus/client_golang v1.11.0 // indirect
+	github.com/psilva261/timsort v1.0.0 // indirect
 	github.com/soheilhy/cmux v0.1.5 // indirect
 	github.com/tmc/grpc-websocket-proxy v0.0.0-20201229170055-e5319fda7802 // indirect
 	github.com/xiang90/probing v0.0.0-20190116061207-43a291ad63a2 // indirect
