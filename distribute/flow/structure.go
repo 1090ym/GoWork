@@ -13,5 +13,22 @@ type Step struct {
 
 type Task struct {
 	Id          int
+	Step        *Step
 	TaskChannel chan interface{}
+}
+
+type InputDataSet struct {
+	shards []*InputDataShard
+}
+
+type OutputDataSet struct {
+	shards []*OutputDataShard
+}
+
+type InputDataShard struct {
+	data []interface{}
+}
+
+type OutputDataShard struct {
+	data []interface{}
 }
