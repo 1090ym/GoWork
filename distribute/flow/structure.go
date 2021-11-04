@@ -8,13 +8,14 @@ type Step struct {
 	Id       int
 	Tasks    []*Task
 	NextStep int
-	Function func([]interface{}) error
+	Function func(shard InputDataShard)
 }
 
 type Task struct {
 	Id          int
 	Step        *Step
 	TaskChannel chan interface{}
+	State       State
 }
 
 type InputDataSet struct {

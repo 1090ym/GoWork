@@ -3,9 +3,10 @@ module GoWork
 go 1.16
 
 require (
-	github.com/chrislusf/glow v0.0.0-20181102060906-4c40a2717eee // indirect
+	github.com/apache/thrift v0.15.0
+	github.com/chrislusf/glow v0.0.0-20181102060906-4c40a2717eee
 	github.com/coreos/bbolt v1.3.6 // indirect
-	github.com/coreos/etcd v3.3.26+incompatible // indirect
+	github.com/coreos/etcd v3.3.26+incompatible
 	github.com/coreos/go-semver v0.3.0 // indirect
 	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf // indirect
 	github.com/coreos/pkg v0.0.0-20180928190104-399ea9e2e55f // indirect
