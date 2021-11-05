@@ -56,7 +56,8 @@ func (step *Step) InputDataToStep(inputDataSet InputDataSet) {
 
 // 将输入数据发送到task的channel中
 func (task *Task) InputDataToTask(input InputDataShard) {
-	for data := range input.data {
+	//fmt.Println("InputDataToTask", input)
+	for _, data := range input.data {
 		task.TaskChannel <- data
 	}
 }

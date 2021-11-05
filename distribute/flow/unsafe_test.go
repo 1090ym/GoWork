@@ -8,15 +8,21 @@ import (
 )
 
 type Graph struct {
-	Id    int
-	Name  string
-	Label string
+	Id       int
+	Name     string
+	Label    string
+	Test1    string
+	Test2    string
+	Test3    string
+	Test4    string
+	Node     []int
+	Edge     []int
+	SubGraph SubGraph
+}
+
+type SubGraph struct {
 	Test1 string
 	Test2 string
-	Test3 string
-	Test4 string
-	Node  []int
-	Edge  []int
 }
 
 type emptyInterface struct {
@@ -42,6 +48,8 @@ func AutoTrans(input interface{}) Graph {
 func NewTrans(input interface{}) Graph {
 	ptr := uintptr((*emptyInterface)(unsafe.Pointer(&input)).word)
 	graph := *(*Graph)(unsafe.Pointer(ptr))
+
+	fmt.Println(graph)
 	return graph
 }
 
@@ -113,6 +121,10 @@ func BenchmarkNewTrans(b *testing.B) {
 		Test4: "graph",
 		Node:  []int{0, 1, 2, 3, 4},
 		Edge:  []int{0, 1, 2, 3, 4},
+		SubGraph: SubGraph{
+			Test1: "test1",
+			Test2: "test2",
+		},
 	}
 	b.ReportAllocs()
 	b.ResetTimer()

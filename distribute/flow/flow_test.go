@@ -25,10 +25,14 @@ func TestLocalDistribute(t *testing.T) {
 }
 
 // 需要传入到step的封装后的函数
-func Step1Func(input InputDataShard) {
-	fmt.Println("Func InputData:", input)
-	ptr := uintptr((*emptyInterface)(unsafe.Pointer(&input.data)).word)
-	data := *(*[]int)(unsafe.Pointer(ptr))
+func Step1Func(inputData InputDataShard) {
+	fmt.Println("Func InputData:", inputData)
+	data := make([]int, 0)
+	for _, input := range inputData.data {
+		ptr := uintptr((*emptyInterface)(unsafe.Pointer(&input)).word)
+		tmp := *(*int)(unsafe.Pointer(ptr))
+		data = append(data, tmp)
+	}
 	Power(data)
 }
 
