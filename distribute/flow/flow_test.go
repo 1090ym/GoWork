@@ -11,21 +11,25 @@ func TestLocalDistribute(t *testing.T) {
 	// 初始化虚拟节点
 	DisManager.InitDistributor([]int{1, 2, 3, 4})
 	// 设置数据
-	row := make([]interface{}, 1024)
-	for i := 0; i < 1024; i++ {
+	row := make([]interface{}, 10)
+	for i := 0; i < 10; i++ {
 		row[i] = i
 	}
 
 	// 添加work函数到每个step
 	DisManager.AddStepToFlow(Step1Func)
-
+	DisManager.ReceiveRpcMsg(row, 1, 0)
+	DisManager.ReceiveRpcMsg(row, 2, 0)
+	DisManager.ReceiveRpcMsg(row, 3, 0)
+	DisManager.ReceiveRpcMsg(row, 4, 0)
 }
 
 // 需要传入到step的封装后的函数
-func Step1Func(shard InputDataShard) {
-	ptr := uintptr((*emptyInterface)(unsafe.Pointer(&shard.data)).word)
-	input := *(*[]int)(unsafe.Pointer(ptr))
-	Power(input)
+func Step1Func(input InputDataShard) {
+	fmt.Println("Func InputData:", input)
+	ptr := uintptr((*emptyInterface)(unsafe.Pointer(&input.data)).word)
+	data := *(*[]int)(unsafe.Pointer(ptr))
+	Power(data)
 }
 
 // work函数

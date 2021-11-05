@@ -19,22 +19,39 @@ func (step *Step) NewTask() *Task {
 // 运行该task
 func (step *Step) RunTask(task *Task) {
 	taskChan := task.TaskChannel
-	inputData := make([]interface{}, TASK_CHANNEL_SIZE)
+	inputData := &InputDataShard{
+		data: make([]interface{}, 0),
+	}
 	for len(taskChan) != 0 {
 		input := <-taskChan
-		inputData = append(inputData, input)
+		inputData.data = append(inputData.data, input)
 	}
-	go step.Function(inputData)
+	go step.Function(*inputData)
 }
 
 // 将数据分发到step的每个task的channel中
 func (step *Step) InputDataToStep(inputDataSet InputDataSet) {
-	for index, shard := range inputDataSet.shards {
-		if index >= len(step.Tasks) {
-			step.Tasks = append(step.Tasks, step.NewTask())
+	pos := 0
+	for _, shard := range inputDataSet.shards {
+		// 该分片中没有分到数据，不需要创建task
+		if len(shard.data) == 0 {
+			continue
 		}
-		step.Tasks[index].InputDataToTask(*shard)
+		step.NewTask()
+		step.Tasks[pos].InputDataToTask(*shard)
+		pos++
 	}
+
+	//for index, shard := range inputDataSet.shards {
+	//	// 该分片中没有分到数据，不需要创建task
+	//	if len(shard.data) == 0 {
+	//		continue
+	//	}
+	//	if index >= len(step.Tasks) {
+	//		step.Tasks = append(step.Tasks, step.NewTask())
+	//	}
+	//	step.Tasks[index].InputDataToTask(*shard)
+	//}
 }
 
 // 将输入数据发送到task的channel中

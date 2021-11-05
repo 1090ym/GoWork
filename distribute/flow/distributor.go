@@ -1,6 +1,9 @@
 package flow
 
-import "strconv"
+import (
+	"fmt"
+	"strconv"
+)
 
 var DisManager Distributor
 
@@ -23,11 +26,12 @@ func (dis *Distributor) ReceiveRpcMsg(row []interface{}, vid int, step int) {
 	index := dis.VidToFlow[vid]
 	flow := dis.Flows[index]
 	inputDataSet := DataPartition(row)
+	PrintInputDataSet(inputDataSet)
 	flow.RunStep(inputDataSet, step)
 }
 
 // 为每个vid对应的flow添加一个step
-func (dis *Distributor) AddStepToFlow(Function func(shard InputDataShard)) {
+func (dis *Distributor) AddStepToFlow(Function func(input InputDataShard)) {
 	for _, flow := range dis.Flows {
 		step := flow.NewStep()
 		step.Function = Function
@@ -35,24 +39,31 @@ func (dis *Distributor) AddStepToFlow(Function func(shard InputDataShard)) {
 	}
 }
 
-// 数据分区策略
+// 对每个step接收到的数据分片到每个task
 func DataPartition(row []interface{}) InputDataSet {
 	// Initial InputData
-	inputDataShard := InputDataSet{
-		shards: make([]*InputDataShard, TASK_SLOT_SIZE),
+	inputData := InputDataSet{
+		shards: make([]*InputDataShard, 0),
 	}
 	for i := 0; i < TASK_SLOT_SIZE; i++ {
 		shard := &InputDataShard{
 			data: make([]interface{}, 0),
 		}
-		inputDataShard.shards = append(inputDataShard.shards, shard)
+		inputData.shards = append(inputData.shards, shard)
 	}
-
 	// row partition by hash % TASK_SLOT_SIZE
-	for r := range row {
-		hash := CalcHash(strconv.Itoa(int(r)))
+	for i, r := range row {
+		hash := CalcHash(strconv.Itoa(int(i)))
 		index := hash % TASK_SLOT_SIZE
-		inputDataShard.shards[index].data = append(inputDataShard.shards[index].data, r)
+		inputData.shards[index].data = append(inputData.shards[index].data, r)
 	}
-	return inputDataShard
+	return inputData
+}
+
+func PrintInputDataSet(inputDataSet InputDataSet) {
+	fmt.Print("inputDataSet: ")
+	for _, shard := range inputDataSet.shards {
+		fmt.Print(*shard, " ")
+	}
+	fmt.Println()
 }

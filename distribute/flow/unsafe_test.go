@@ -8,10 +8,15 @@ import (
 )
 
 type Graph struct {
-	Id   int
-	Name string
-	Node []int
-	Edge []int
+	Id    int
+	Name  string
+	Label string
+	Test1 string
+	Test2 string
+	Test3 string
+	Test4 string
+	Node  []int
+	Edge  []int
 }
 
 type emptyInterface struct {
@@ -22,34 +27,37 @@ type emptyInterface struct {
 var g Graph
 var t = reflect.TypeOf(g)
 
-func AutoTrans() Graph {
-	var input interface{}
-	input = Graph{
-		Id:   0,
-		Name: "graph",
-		Node: []int{0, 1, 2, 3, 4},
-		Edge: []int{0, 1, 2, 3, 4},
-	}
-
+// interface{}转Graph
+func AutoTrans(input interface{}) Graph {
 	graph := Graph{
 		Id:   input.(Graph).Id,
 		Name: input.(Graph).Name,
 		Node: input.(Graph).Node,
 		Edge: input.(Graph).Edge,
 	}
-	//graph = input	// 自动转换
 	return graph
-	//fmt.Println(input)
-	//fmt.Println(graph)
 }
 
+// 使用unsafe转换
+func NewTrans(input interface{}) Graph {
+	ptr := uintptr((*emptyInterface)(unsafe.Pointer(&input)).word)
+	graph := *(*Graph)(unsafe.Pointer(ptr))
+	return graph
+}
+
+// Graph转interface{}
 func AutoAssign() interface{} {
 	var input interface{}
 	g = Graph{
-		Id:   0,
-		Name: "graph",
-		Node: []int{0, 1, 2, 3, 4},
-		Edge: []int{0, 1, 2, 3, 4},
+		Id:    0,
+		Name:  "graph",
+		Label: "graph",
+		Test1: "graph",
+		Test2: "graph",
+		Test3: "graph",
+		Test4: "graph",
+		Node:  []int{0, 1, 2, 3, 4},
+		Edge:  []int{0, 1, 2, 3, 4},
 	}
 	input = g
 	return input
@@ -58,50 +66,63 @@ func AutoAssign() interface{} {
 func NewAssign() interface{} {
 	var input interface{}
 	g = Graph{
-		Id:   0,
-		Name: "graph",
-		Node: []int{0, 1, 2, 3, 4},
-		Edge: []int{0, 1, 2, 3, 4},
+		Id:    0,
+		Name:  "graph",
+		Label: "graph",
+		Test1: "graph",
+		Test2: "graph",
+		Test3: "graph",
+		Test4: "graph",
+		Node:  []int{0, 1, 2, 3, 4},
+		Edge:  []int{0, 1, 2, 3, 4},
 	}
 	input = *(*Graph)(unsafe.Pointer(&g))
 	return input
 }
 
-func NewTrans() Graph {
+func BenchmarkAuto(b *testing.B) {
 	var input interface{}
 	input = Graph{
-		Id:   0,
-		Name: "graph",
-		Node: []int{0, 1, 2, 3, 4},
-		Edge: []int{0, 1, 2, 3, 4},
+		Id:    0,
+		Name:  "graph",
+		Label: "graph",
+		Test1: "graph",
+		Test2: "graph",
+		Test3: "graph",
+		Test4: "graph",
+		Node:  []int{0, 1, 2, 3, 4},
+		Edge:  []int{0, 1, 2, 3, 4},
 	}
-
-	ptr := uintptr((*emptyInterface)(unsafe.Pointer(&input)).word)
-	graph := *(*Graph)(unsafe.Pointer(ptr))
-
-	fmt.Println(graph)
-
-	return graph
-}
-
-func BenchmarkAuto(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		AutoAssign()
+		AutoTrans(input)
 	}
 }
 
 func BenchmarkNewTrans(b *testing.B) {
+	var input interface{}
+	input = Graph{
+		Id:    0,
+		Name:  "graph",
+		Label: "graph",
+		Test1: "graph",
+		Test2: "graph",
+		Test3: "graph",
+		Test4: "graph",
+		Node:  []int{0, 1, 2, 3, 4},
+		Edge:  []int{0, 1, 2, 3, 4},
+	}
 	b.ReportAllocs()
 	b.ResetTimer()
-
 	for i := 0; i < b.N; i++ {
-		NewAssign()
+		NewTrans(input)
 	}
 }
 
 func TestNewTrans(t *testing.T) {
-	NewTrans()
+	slice := make([]int, 10)
+	slice = append(slice, 123)
+	fmt.Println(slice)
 }

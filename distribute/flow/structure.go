@@ -8,7 +8,7 @@ type Step struct {
 	Id       int
 	Tasks    []*Task
 	NextStep int
-	Function func(shard InputDataShard)
+	Function func(inputData InputDataShard)
 }
 
 type Task struct {
@@ -33,3 +33,5 @@ type InputDataShard struct {
 type OutputDataShard struct {
 	data []interface{}
 }
+
+type InputData interface{}
