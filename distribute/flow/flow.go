@@ -7,7 +7,7 @@ func (dis *Distributor) NewFlow() *Flow {
 	return flow
 }
 
-// 运行step下的task
+// 运行step下的所有task
 func (fl *Flow) RunStep(inputDataSet InputDataSet, nextStep int) {
 	if nextStep >= len(fl.Steps) {
 		return

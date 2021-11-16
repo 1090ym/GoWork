@@ -21,7 +21,7 @@ func (dis *Distributor) InitDistributor(vids []int) {
 	}
 }
 
-// 接收rpc消息
+// 接收rpc消息，并传到指定的step运行
 func (dis *Distributor) ReceiveRpcMsg(row []interface{}, vid int, step int) {
 	index := dis.VidToFlow[vid]
 	flow := dis.Flows[index]
@@ -60,6 +60,7 @@ func DataPartition(row []interface{}) InputDataSet {
 	return inputData
 }
 
+// 打印dataset
 func PrintInputDataSet(inputDataSet InputDataSet) {
 	fmt.Print("inputDataSet: ")
 	for _, shard := range inputDataSet.shards {

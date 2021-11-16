@@ -3,6 +3,7 @@ package flow
 import (
 	"fmt"
 	"testing"
+	"time"
 	"unsafe"
 )
 
@@ -19,9 +20,11 @@ func TestLocalDistribute(t *testing.T) {
 	// 添加work函数到每个step
 	DisManager.AddStepToFlow(Step1Func)
 	DisManager.ReceiveRpcMsg(row, 1, 0)
-	DisManager.ReceiveRpcMsg(row, 2, 0)
-	DisManager.ReceiveRpcMsg(row, 3, 0)
-	DisManager.ReceiveRpcMsg(row, 4, 0)
+	//DisManager.ReceiveRpcMsg(row, 2, 0)
+	//DisManager.ReceiveRpcMsg(row, 3, 0)
+	//DisManager.ReceiveRpcMsg(row, 4, 0)
+
+	time.Sleep(2 * time.Second)
 }
 
 // 需要传入到step的封装后的函数
